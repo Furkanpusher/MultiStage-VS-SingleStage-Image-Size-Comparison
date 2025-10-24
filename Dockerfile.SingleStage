@@ -1,0 +1,15 @@
+# Tek aşamalı image:
+
+FROM golang:1.21
+
+WORKDIR /app
+# konteyner içinde çalışılacak klasör
+
+# source kodu konteynere kopyala
+COPY main.go .
+
+#derliyoruz go kodunu
+RUN go build -o main main.go
+
+# app altındaki maini çalıştır
+CMD ["/app/main"]

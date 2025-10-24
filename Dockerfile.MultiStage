@@ -1,0 +1,25 @@
+# 1. AŞAMA: BUILDER
+FROM golang:1.21 AS builder
+
+ENV CGO_ENABLED=0
+
+WORKDIR /app
+
+COPY main.go .
+
+RUN go build -o main main.go
+
+# buraya kadar tek stageli dockerfile ile aynı
+
+# 2. AŞAMA: FINAL / RUNTIME (Çalıştırma Ortamı)
+
+FROM scratch 
+# en son stagede kullanılcak base image olabildiğince küçük seçmek lazım burda biz en minimali seçtik
+
+WORKDIR /app
+
+COPY --from=builder /app/main /app/main
+# SADECE BUİLDER AŞAMASINDAN GEREKEN DERLENMİŞ MAİN kodunu aldık, sadece işimize yarayanı alcaz
+
+# ve derlenmiş kodu çalıştırıyoruz 
+CMD ["/app/main"]
